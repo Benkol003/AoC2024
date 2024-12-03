@@ -6,12 +6,9 @@ let content =
   let _content = really_input_string ic len in
   close_in ic; _content
 
-let levels =
+let reports =
   let lines = List.filter (fun s -> s<>"") (String.split_on_char '\n' content) in (* filter to get around last newline*)
   List.map (fun line -> let ns = String.split_on_char ' ' line in List.map int_of_string ns) lines;;
-
-
-List.iter (fun level -> List.iter (fun l -> printf "%d " l ) level; print_newline () ) levels;;
 
 let sign : int -> int = fun x ->
   if x > 0 then 1
@@ -19,30 +16,49 @@ let sign : int -> int = fun x ->
   else 0
 
 
-let rec check_level_r : int -> int list -> int -> bool = fun head level dir ->
-  match level with
+let rec check_report_r : int -> int list -> int -> bool = fun head report dir ->
+  match report with
   | [] -> true
-  | eh::et -> if sign (eh-head)<>dir || abs (eh-head) > 3 then false else check_level_r eh et dir
+  | eh::et -> if sign (eh-head)<>dir || abs (eh-head) > 3 then false else check_report_r eh et dir
 
 
-let check_level : int list -> bool = fun level ->
-  let (e1,e2,el) = match level with
-  |  [] -> failwith "empty list"
+let check_report : int list -> bool = fun report ->
+  let (e1,e2,el) = match report with
+  | [] -> failwith "empty report"
   | e1 :: em -> match em with
                 | e2 :: el -> (e1,e2,el)
-                | [] -> failwith "list len 1" in
+                | [] -> failwith "report len 1" in
 
-  let dir = sign (e2-e1) in
-  if (e2-e1)=0 || abs (e2-e1)>3 then false else check_level_r e2 el dir;;
+  let dir = sign (e2-e1) in check_report_r e1 (e2::el) dir;;
 
-printf "part 1: %d\n" ( List.fold_left (fun acc i -> if check_level i then acc+1 else acc) 0 levels);;
+printf "part 1: %d\n" ( List.fold_left (fun acc i -> if check_report i then acc+1 else acc) 0 reports);;
 
+(*//////////////*)
 
-printf "part 2: %d\n" 0;;
+(* only allow dampening once i.e. remove element in front on a fail*)
 (*
-in a level if theres an error, remove one ahead, see if then valid with at i+2 else return false
-also can only do this once
+unsafe transition 
+args a - b - c - [dl]
+b-c unsafe
+either a - c::dl safe or b-dl safe (fall back to check_report)
 
-two sets of logic for init and recurse states...
-
+dl empty:
+  fine with check_report
+else if unsafe level then only call check_report _dampened_r 
 *)
+let rec check_report_dampened_r : int -> int -> int -> int list -> int -> bool = fun a b c dl dir ->
+  if sign (c-b)<>dir || abs (c-b) > 3 then
+    ( check_report_r a (c::dl) dir ) || (check_report_r b dl dir)
+  else
+    match dl with
+    | [] -> true
+    | d::dl -> check_report_dampened_r b c d dl dir
+
+let check_report_dampened : int list -> bool = fun report ->
+  match report with
+  | [] -> true
+  | _::[] -> true
+  | a::b::[] ->  abs (b-a) < 3 && sign(b-a)<>0
+  | a::b::c::dl -> abs (b-a) < 3 && sign(b-a)<>0 && check_report_dampened_r a b c dl (sign (b-a))
+
+let _ = printf "part 2: %d\n" ( List.fold_left (fun acc i -> if check_report_dampened i then acc+1 else acc) 0 reports);;
