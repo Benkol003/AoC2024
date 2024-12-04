@@ -6,7 +6,7 @@ let content =
   let _content = really_input_string ic len in
   close_in ic; _content
 
-let _print_int_list : int list -> unit = fun l -> List.iter(fun i -> printf "%d " i) l;;
+
 
 let reports =
   let lines = List.filter (fun s -> s<>"") (String.split_on_char '\n' content) in (* filter to get around last newline*)
