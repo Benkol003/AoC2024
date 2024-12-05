@@ -5,7 +5,24 @@ let remove_one_all : int list -> int list list = fun l ->
     match after with
       | [] -> acc
       | (eh::after') -> aux (before@[eh]) after' (acc@[before@after']) in let acc = [] in aux [] l acc
+  ;;
 
+let rec list_get i list =
+  match list with
+  | (h::t) -> if i=0 then h else (list_get (i-1) t)
+  | _ -> failwith "index out of range" 
+  ;;
+
+let readlines_file filename = 
+  let lines = ref [] in
+  let chan = open_in filename in
+  try
+    while true; do
+      lines := input_line chan :: !lines
+    done; !lines
+  with End_of_file ->
+    close_in chan;
+    List.rev !lines ;;
 
 let file_as_string fname = 
   let ic = open_in fname in

@@ -6,7 +6,7 @@ let mul_matcher= "mul\\(\\d+,\\d+\\)"
 let mul_enable = "do\\(\\)"
 let mul_disable= "don't\\(\\)"
 
-let expr = file_as_string "input";;
+let expr = file_as_string "./day3/input";;
 let mults expr = let m = Pcre.extract_all ~rex: (Pcre.regexp mul_matcher) expr in
   Array.map (fun i -> Array.get i 0) m;;
 
