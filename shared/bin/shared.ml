@@ -1,7 +1,6 @@
 open Printf
 
 let print_int_list : int list -> unit = fun l -> List.iter(fun i -> printf "%d " i) l;;
-
 let remove_one_all : int list -> int list list = fun l ->
   let rec aux : int list -> int list -> int list list -> int list list = fun before after acc ->
     match after with
@@ -14,6 +13,18 @@ let file_as_string fname =
   let len = in_channel_length ic in
   let _content = really_input_string ic len in
   close_in ic; _content;;
+
+let transpose matrix =
+  let rows = Array.length matrix in
+  let cols = Array.length matrix.(0) in
+  Array.init cols (fun i ->
+    Array.init rows (fun j ->
+      matrix.(j).(i)
+    )
+  )
+
+let array_to_string a =
+  String.of_seq (Array.to_seq a)
 
   (*
   let content =

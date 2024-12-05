@@ -1,0 +1,11 @@
+{
+    "configurations": [
+    {
+        "name": "OCaml earlybird (experimental)",
+        "type": "ocaml.earlybird",
+        "request": "launch",
+        "program": "${workspaceFolder}/_build/default/day4/bin/main.bc",
+        "stopOnEntry" : true
+    }
+    ]
+}
