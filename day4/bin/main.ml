@@ -68,9 +68,16 @@ let xmas_count_row matrix = Array.fold_left (fun acc row -> acc+( let row_str = 
 this is just a image kernel
 *)
 
-let xmas_kernel matrix = 
-  if (Array.length matrix)<>3 || (Array.length matrix.(0))<>3 then failwith "wrong kernel size" else
-    let tmp = ref [] in let diag_r = for i =0 to 2 do tmp := (matrix.(i).(i)::!tmp) done in
-    let tmp = ref [] in let diag_l = for i =0 to 2 do tmp := (matrix.(2-i).(i)::!tmp) done in
+let xmas_kernel_check matrix offset_row offset_column = 
+    let tmp = ref [] in let diag_r = for i =0 to 2 do tmp := (matrix.(i+offset_row).(i+offset_column)::!tmp) done; String.of_seq (List.to_seq !tmp)  in
+    let tmp = ref [] in let diag_l = for i =0 to 2 do tmp := (matrix.(2-i+offset_row).(i+offset_column)::!tmp) done; String.of_seq (List.to_seq !tmp) in
+    if (diag_r="MAS" || diag_r="SAM") && (diag_l="MAS"||diag_l="SAM") then true else false;;
 
-  false;;
+
+let acc = ref 0 in
+for r = 0 to (Array.length input)-3 do
+  for c = 0 to (Array.length input.(0))-3 do
+    if (xmas_kernel_check input r c)=true then acc:= !acc + 1
+  done
+done;
+printf "part 2: %d" !acc;;
