@@ -22,8 +22,16 @@ let transpose matrix =
     )
   )
 
-let array_to_string a =
-  String.of_seq (Array.to_seq a)
+  let array_to_string a =
+    String.of_seq (Array.to_seq a)
+
+let string_to_array s =
+  Array.init (String.length s) (fun i -> String.get s i)
+
+let print_char_matrix matrix = 
+  Array.map (fun i -> array_to_string i |> print_endline) matrix
+
+
 
 
 let array_reverse a = 

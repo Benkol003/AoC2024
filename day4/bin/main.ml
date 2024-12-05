@@ -12,11 +12,6 @@ diagonal - traverse manually and only for diags > 4
 open Shared
 open Printf
 
-let string_to_array s =
-  Array.init (String.length s) (fun i -> String.get s i)
-
-let print_char_matrix matrix = 
-    Array.map (fun i -> array_to_string i |> print_endline) matrix
 let input = let i = file_as_string "./day4/input" in let il = String.split_on_char '\n' i in let ila = (List.map (fun j -> string_to_array j) il) in Array.of_list ila;;
 
 let transpose matrix =
@@ -58,23 +53,24 @@ let diagonals_right matrix =
 print_endline (if (  let rows = Array.length input in let cols = Array.length input.(0) in (rows+cols-1)=Array.length (diagonals_right input) ) then "diagonals_right test : PASSED" else "diagonals_right test: FAILED");;
 
 let diags_r = (diagonals_right input)
-let diags_l = diagonals_right (mirror input)
-
-let _ = print_endline "input:";;
-print_char_matrix input;;
-
-let _ = print_endline "tranpose input:";;
-print_char_matrix (transpose input);;
-
-let _ = print_endline "diags r:";;
-print_char_matrix diags_r;;
-
-let _ = print_endline "diags l:";;
-print_char_matrix diags_l;;
+let diags_l = input |> mirror |> diagonals_right
 
 (* checking using regex only per-row *)
-let xmas_count_row matrix = Array.fold_left (fun acc row -> acc+( let row_str = array_to_string row in ((count_occurences "XMAS" row_str)+((count_occurences "SMAX" row_str)))) ) 0 matrix;;
+let xmas_count_row matrix = Array.fold_left (fun acc row -> acc+( let row_str = array_to_string row in (count_occurences "XMAS" row_str)+(count_occurences "SAMX" row_str)) ) 0 matrix;;
+(xmas_count_row input) +
+(input |> transpose  |> xmas_count_row ) +
+(xmas_count_row diags_r) +
+(xmas_count_row diags_l) 
+|> printf "part 1 total: %d";;
 
-(xmas_count_row input) + (transpose input |> xmas_count_row ) + (xmas_count_row diags_r) + (xmas_count_row diags_l)
 
-|> printf "total %d\n";;
+(* part 2
+this is just a image kernel
+*)
+
+let xmas_kernel matrix = 
+  if (Array.length matrix)<>3 || (Array.length matrix.(0))<>3 then failwith "wrong kernel size" else
+    let tmp = ref [] in let diag_r = for i =0 to 2 do tmp := (matrix.(i).(i)::!tmp) done in
+    let tmp = ref [] in let diag_l = for i =0 to 2 do tmp := (matrix.(2-i).(i)::!tmp) done in
+
+  false;;
