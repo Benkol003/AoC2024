@@ -1,2 +1,6 @@
-(test
- (name test_shared))
+(library
+ (name test)
+ (inline_tests)
+ (libraries shared)
+ (preprocess (pps ppx_inline_test))
+ )

@@ -1,5 +1,4 @@
 open Printf
-
 let print_int_list : int list -> unit = fun l -> List.iter(fun i -> printf "%d " i) l;;
 let remove_one_all : int list -> int list list = fun l ->
   let rec aux : int list -> int list -> int list list -> int list list = fun before after acc ->
@@ -26,8 +25,15 @@ let transpose matrix =
 let array_to_string a =
   String.of_seq (Array.to_seq a)
 
-  (*
-  let content =
-    let lines = List.filter (fun s -> s<>"") (String.split_on_char '\n' content_raw) in (* filter to get around last newline*)
-    List.map (fun line -> let ns = String.split_on_char ' ' line in List.map int_of_string ns) lines;;
-    *)
+
+let array_reverse a = 
+    let ret = (Array.make (Array.length a) a.(0) ) in
+    for i = 0 to ((Array.length a)-1) do
+      Array.set ret ((Array.length a)-1-i) a.(i)
+    done; ret
+let count_occurences : string -> string -> int = fun findStr string ->
+  let rec aux acc pos =
+    if pos > (String.length string) - (String.length findStr) then acc else (
+      if (String.sub string pos (String.length findStr))=findStr then aux (acc+1) (pos+1) else aux acc (pos+1)
+    ) in aux 0 0;;
+  

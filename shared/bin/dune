@@ -1,4 +1,5 @@
 (library
+ (name shared)
  (public_name shared)
  (modules shared)
 )
