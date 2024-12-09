@@ -6,3 +6,4 @@ let%test _ = (count_occurences "XMAS" "XMAS ")=1
 let%test _ = (array_reverse [|1;2;3;4;5;|])=[|5;4;3;2;1|]
 let%test _ = (array_to_string [|'a';'b';'c';'d'|])="abcd"
 let%test _ = (list_get ((List.length [1;2;3])/2) [1;2;3] )=2
+let%test _ = let a=[|1;2;3;4|] in (array_swap a 0 3)=[|4;2;3;1|]

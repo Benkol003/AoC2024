@@ -62,3 +62,8 @@ let count_occurences : string -> string -> int = fun findStr string ->
       if (String.sub string pos (String.length findStr))=findStr then aux (acc+1) (pos+1) else aux acc (pos+1)
     ) in aux 0 0;;
   
+
+let array_swap array i j =
+    let tmp = array.(i) in
+    array.(i) <- array.(j);
+    array.(j) <- tmp; array;;
